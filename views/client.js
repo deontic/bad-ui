@@ -4,7 +4,7 @@
  */
 
 window.onload = function(){
-	alert('Terms of Service\n1) You may not use your own mouse; click on the window to use our customized high performance high speed mouse.\nAdditionally, you will be reminded of any notices frequently so you remember (this will consume clicks).')
+	alert('Terms of Service\n1) You may not use your own mouse; click on the window to use our customized high performance mouse.\nAdditionally, you will be reminded of any notices frequently so you remember (this will consume clicks).')
 }
 
 let canvas = document.querySelector('canvas');
