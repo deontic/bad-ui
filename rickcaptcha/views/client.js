@@ -156,28 +156,27 @@ let advance = () => {
 	}
 };
 
-const du  = document.getElementById('du')
+const du = document.getElementById('du');
 let counter;
 let video = document.getElementById('if');
 let audio = document.createElement('Audio');
 let button2 = document.getElementById('verify2');
 
-
-let onAudioShouldBeEnded = ()=>	{
-		audio.pause()
-	  clearInterval(counter);
-		counter = null;
-		du.textContent = `duration left: 0s`
-		video.pause();
-		button2.style['pointer-events'] = 'None';
-		button2.textContent = ('verified️️ ✔️');
-		if (redirectUrl){
-			button2.textContent +='; redirecting'
-			setTimeout(() => {
-				window.location.href = redirectUrl;
-			}, 1200);
-		}
-}
+let onAudioShouldBeEnded = () => {
+	audio.pause();
+	clearInterval(counter);
+	counter = null;
+	du.textContent = `duration left: 0s`;
+	video.pause();
+	button2.style['pointer-events'] = 'None';
+	button2.textContent = 'verified️️ ✔️';
+	if (redirectUrl) {
+		button2.textContent += '; redirecting';
+		setTimeout(() => {
+			window.location.href = redirectUrl;
+		}, 1200);
+	}
+};
 document.getElementById('verify1').onclick = () => {
 	// check order
 	let imgElements = document.getElementsByTagName('img');
@@ -209,38 +208,19 @@ document.getElementById('verify1').onclick = () => {
 	d.style.visibility = 'visible';
 	d.style.top = '0px';
 
-	// let video = document.createElement('Video'); video.width="612"
-	// video.height="315"
-	// video.autoplay='true'
-	// video.src="https://i.imgur.com/FXEZiJK.mp4"
+	// this is within an onclick handler, therefore
+	// chrome will only play the video because consent was 'given' by the user (clicking a button)
 
-	// video = document.getElementById('if');
-	video.autoplay = 'true';
+	video.play();
 
-
-
-	// let t = Date.now();
-	audio.autoplay = 'true';
-	audio.src = 'rickaudio.mp3';
-	// compensation
-	// audio.currentTime = video.currentTime - (Date.now() - t) - 0.5;
-
+	// video.autoplay = 'true';
+	// audio.autoplay = 'true';
+	// audio.src = 'rickaudio.mp3';
 	// audio seems to play late often
-
 	// hopefully this should fix the sync issues
-	audio.currentTime = 0//(Date.now() - t)
-	video.currentTime = 0.04
+	// audio.currentTime = 0//(Date.now() - t)
+	// video.currentTime = 0.04
 
-
-
-
-
-
-	// audio.currentTime += 5;
-	// how does this not work sometimes? just how?
-	// audio.addEventListener('ended', onAudioEnded, false);
-
-	
 	button2.onclick = () => {
 		if (audio.currentTime < 60) {
 			// display 60 hours now
@@ -254,22 +234,19 @@ document.getElementById('verify1').onclick = () => {
 			clearInterval(counter);
 			counter = null;
 			du.textContent = '∞';
-
 		}
 	};
 };
 
-
-
-
-let num = 65
-counter = setInterval(()=>{
-	if(num===0){
+let num = 61;
+counter = setInterval(() => {
+	if (num === 0) {
 		clearInterval(counter);
-		counter=null;
-		// need this because audio ended does not fire at the right time, we should just remove  it
-		onAudioShouldBeEnded()
+		counter = null;
+		// we don't even need onended for the audio
+		// we can just do it here
+		onAudioShouldBeEnded();
 	}
-	du.textContent = `duration left: ${num}s`
-	num -= 1
-}, 1000)
+	du.textContent = `duration left: ${num}s`;
+	num -= 1;
+}, 1000);
