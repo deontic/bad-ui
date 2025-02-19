@@ -5,10 +5,20 @@
 
 window.onload = function(){
 	alert('Terms of Service\n1) You may not use your own mouse; click on the window to use our customized high performance mouse.\nAdditionally, you will be reminded of any notices frequently so you remember (this will consume clicks).')
+	createOverlay()
+}
+function createOverlay(){
+	const overlay = document.createElement('div');
+	overlay.classList.add('overlay');
+	overlay.innerHTML = '<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; background: black; padding: 20px; border-radius: 5px;">Click anywhere to use enhanced mouse</div>';
+	overlay.onclick = function () {
+		document.body.removeChild(overlay);
+		canvas.requestPointerLock();
+	};
+	document.body.appendChild(overlay);	
 }
 
 let canvas = document.querySelector('canvas');
-// console.log(canvas)
 
 /**
  * new strat
@@ -24,8 +34,8 @@ var y = 150;
 var ctx = canvas.getContext('2d');
 
 const image = document.getElementById('source');
+const chargeLevel = document.getElementById('charge_level');
 
-let chargeLevel = document.getElementById('charge_level');
 
 let contains = (obj, secondObj, usePadding=true) => {
 	let {x, y, right, bottom} = obj.getBoundingClientRect();
@@ -49,8 +59,8 @@ let setUpListener = () => {
 	stopDischarging();
 	return setInterval(() => {
 		if (contains(charge_level, image)) {
-			console.log('contains');
-			console.log('current: ', mult);
+			// console.log('contains');
+			// console.log('current: ', mult);
 			let t = mult + step * chargeStrictnessFactor
 			mult = (t <= maxMult && t) || maxMult;
 			console.log("inc'd mult to %s", mult);
@@ -226,8 +236,11 @@ let clickCount = 11;
 const clicks = document.createElement('span');
 
 document.body.appendChild(clicks);
+
+let decX = false;
+let decY = true;
 function updatePosition(e) {
-	// updateClickCount()
+    if (!e) {return};  
 	x += e.movementX * mult;
 	y += e.movementY * mult;
 	// display the text here
@@ -236,10 +249,31 @@ function updatePosition(e) {
 	clicks.style.left = x + 25 + 'px';
 	clicks.style.top = y + 'px';
 
-	if (contains(btn, image, false)){
-		console.log('contains')
-		btn.style.transform = `translate(${(x*1.3)+Math.random()*100}px, 0px)`
+	if (contains(btn, image, false)) {
+		console.log('contains');
+		let newX = (x * 1.3) + Math.random() * 10;
+		const btnWidth = btn.offsetWidth;
+		const maxX = window.innerWidth - btnWidth;
 
+		if (x >= maxX) {
+			decX = true
+		}else if (x <= btnWidth) {
+			decX = false;
+		}
+
+		let newY = (y * 1.3) + Math.random() * 10;
+		const btnHeight = btn.offsetHeight;
+		const maxY = window.innerHeight - btnHeight;
+		if (y >= maxY) {
+            decY = true;
+        } else if (y <= btnHeight) {
+            decY = false;
+        }
+		newX = decX ? -newX: newX;
+		newX = Math.min(Math.max(newX, 0), maxX);
+		newY = decY ? -newY: newY;
+		newY = Math.min(Math.max(newY, 0), maxY);
+        btn.style.transform = `translate(${newX}px, ${newY}px)`;		
 	}
 
 	if (contains(charge_level, image) && !listener) {
@@ -259,8 +293,8 @@ function updatePosition(e) {
 
 	// clamp the FAKE mouse's position by using the FAKE mouse's position
 
-	let fakeX = image.getBoundingClientRect().x;
-	let fakeY = image.getBoundingClientRect().y;
+	// let fakeX = image.getBoundingClientRect().x;
+	// let fakeY = image.getBoundingClientRect().y;
 
 	if (x > width) {
 		x = width;
@@ -283,3 +317,4 @@ function updatePosition(e) {
 		});
 	}
 }
+

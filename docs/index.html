@@ -2,7 +2,22 @@
 <html>
 <head>
 <meta name=viewport content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-<style>body{cursor:none;font-family:sans-serif;overflow:hidden;margin:0;height:100vh;width:100vw}</style>
+<style>body{cursor:none;font-family:sans-serif;overflow:hidden;margin:0;height:100vh;width:100vw}
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.01);
+    cursor: none;
+    z-index: 9999;
+  }
+  body.pointer-lock-active {
+    cursor: none;
+  }
+</style>
+</style>
 </head>
 <body id=main>
 <div>
